@@ -1,0 +1,944 @@
+/* =========================================================
+   ChromaticFit - Main Stylesheet
+   Mobile-first: base styles are for phones, media queries
+   at the bottom add changes for larger screens.
+   ========================================================= */
+
+
+/* ---------- 1. CSS VARIABLES ---------- */
+
+/* Loads one distinctive heading font. Body text stays on the fast,
+   no-download system font stack below, so performance doesn't suffer. */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap');
+
+:root {
+  --bg: #faf8f5;               /* warm ivory page background */
+  --surface: #ffffff;          /* white for cards and navbar */
+  --text: #2b2723;             /* charcoal text */
+  --text-muted: #6b625a;       /* softer charcoal-brown text */
+  --accent: #c9b79c;           /* beige, for quiet/neutral touches */
+  --accent-tint: #f1eadf;      /* soft badge/chip background (was repeated as a raw hex 3x) */
+  --accent-rust: #b5502a;      /* primary brand accent, drawn from the app's own "Terracotta" palette */
+  --accent-rust-dark: #96401f; /* hover/active shade of the accent above */
+  --accent-teal: #0f5c53;      /* secondary accent, drawn from the app's own "Deep Teal" palette */
+  --border: #ece5da;           /* light border color */
+  --radius: 16px;              /* rounded corners */
+  --shadow: 0 6px 24px rgba(43, 39, 35, 0.08);
+
+  --font: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  --font-heading: "Fraunces", Georgia, "Times New Roman", serif;
+
+  /* A small spacing scale, so gaps and padding stay consistent
+     instead of every rule inventing its own pixel value */
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 40px;
+  --space-xl: 64px;
+}
+
+/* ---------- 2. RESET & BASE STYLES ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* NEW: the navbar is sticky (64px tall), so when a link scrolls to a
+     section, leave a gap at the top so the navbar doesn't cover the heading */
+  scroll-padding-top: 72px;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ---------- 1b. TYPOGRAPHY ---------- */
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+}
+
+.container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+/* ---------- 3. NAVIGATION BAR ---------- */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+.logo {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.logo span {
+  color: var(--accent);
+}
+
+.nav-toggle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.nav-toggle__bar {
+  width: 18px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: transform 0.25s ease, opacity 0.2s ease;
+}
+
+/* Morphs the three bars into an X when the menu is open */
+.nav-toggle--active .nav-toggle__bar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.nav-toggle--active .nav-toggle__bar:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-toggle--active .nav-toggle__bar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.nav-links {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 20px 16px;
+}
+
+.nav-links.open {
+  display: flex;
+}
+
+.nav-links a {
+  padding: 10px 0;
+  color: var(--text-muted);
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover {
+  color: var(--text);
+}
+
+
+/* ---------- 4. HERO SECTION ---------- */
+.hero {
+  padding: 56px 0 72px;
+}
+
+.hero__inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.hero__badge {
+  display: inline-block;
+  background: var(--accent-tint);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 16px;
+}
+
+.hero h1 {
+  font-size: clamp(2rem, 6vw, 3.25rem);
+  line-height: 1.15;
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+}
+
+.hero__description {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  max-width: 480px;
+  margin-bottom: 28px;
+}
+
+/* NEW: holds the two hero buttons side by side (wraps on small screens) */
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+
+/* ---------- 5. BUTTONS ---------- */
+.btn {
+  display: inline-block;      /* lets a link (<a>) look like a button */
+  text-align: center;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 999px;
+  background: var(--accent-rust);
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--accent-rust-dark);
+  transform: translateY(-2px);
+}
+
+.btn:hover:not(:disabled) {
+  opacity: 0.85;
+  transform: translateY(-2px);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(0) scale(0.97);
+}
+
+.btn:disabled {
+  background: var(--accent);
+  cursor: not-allowed;
+}
+
+
+/* ---------- 6. DECORATIVE SWATCH CARD ---------- */
+.swatch-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 28px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+.swatch {
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
+}
+
+.swatch--1 { background: var(--accent-tint); }
+.swatch--2 { background: var(--accent-rust); }
+.swatch--3 { background: var(--accent-teal); }
+.swatch--4 { background: var(--text); }
+
+
+/* ---------- 7. GENERAL SECTIONS (NEW) ---------- */
+.section {
+  padding: var(--space-xl) 0;
+}
+
+/* Alternate section: white background with thin borders, for visual rhythm */
+.section--alt {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.section__header {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto var(--space-lg);
+}
+
+.section__header h2 {
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+
+.section__header p {
+  color: var(--text-muted);
+}
+
+
+/* ---------- 8. CARDS (NEW) ---------- */
+/* .card is a reusable style shared by the step cards and feature cards */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 28px 24px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(43, 39, 35, 0.12);
+}
+
+/* On the white "alt" section, use the off-white color for cards instead */
+.section--alt .card {
+  background: var(--bg);
+  box-shadow: none;
+}
+
+/* Grids: one column on phones (larger screens change this below) */
+.steps,
+.features {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.step-card__number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent-rust);
+  color: #ffffff;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.feature-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--accent-tint);
+  color: var(--accent-rust);
+  margin-bottom: 14px;
+}
+
+.step-card h3,
+.feature-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.step-card p,
+.feature-card p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+
+/* ---------- 9. ABOUT SECTION (NEW) ---------- */
+.about {
+  max-width: 760px;
+  text-align: center;
+}
+
+.about__label {
+  font-weight: 600;
+}
+
+/* Small rounded labels for the five skin-tone categories */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 16px 0 32px;
+}
+
+.chip {
+  background: var(--accent-tint);
+  color: var(--accent-rust);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 999px;
+}
+
+/* Highlighted box for the accuracy disclaimer */
+.notice {
+  text-align: left;
+  background: #f7f1e6;
+  border-left: 4px solid var(--accent-rust);
+  border-radius: 8px;
+  padding: 16px 20px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+/* ---------- STEP 3: UPLOAD & PREVIEW ---------- */
+
+/* The "hidden" attribute normally hides an element, but rules like
+   display:flex can override it. This rule makes "hidden" always win. */
+[hidden] {
+  display: none !important;
+}
+
+/* Outline button style (used together with .btn) */
+.btn--outline {
+  background: transparent;
+  color: var(--text);
+  border: 2px solid var(--text);
+  padding: 12px 26px;       /* 2px less than .btn to make up for the border */
+}
+
+
+/* Larger variant, reserved for the single most important action on a page */
+.btn--lg {
+  padding: 18px 36px;
+  font-size: 1.05rem;
+}
+
+
+/* Card that holds the upload area and the preview */
+.analyze-card {
+  max-width: 760px;
+  margin: 0 auto;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+/* Drag-and-drop area */
+.dropzone {
+  background: var(--surface);
+  border: 2px dashed var(--accent);
+  border-radius: var(--radius);
+  padding: 40px 20px;
+  text-align: center;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+/* Added by JavaScript while a file is being dragged over the area */
+.dropzone--active {
+  background: #f7f1e6;
+  border-color: var(--text);
+}
+
+.dropzone__icon {
+  display: flex;
+  justify-content: center;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.dropzone__title {
+  font-weight: 600;
+}
+
+.dropzone__hint {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+}
+
+/* ---------- STEP 4: CAMERA ---------- */
+
+/* Row of buttons under the drop area (Choose Image / Use Camera) */
+.dropzone__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* Camera video panel */
+.camera-panel__video {
+  display: block;
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+  background: #000;         /* shows black while the camera is still loading */
+  border-radius: 12px;
+  margin-bottom: 16px;
+
+  /* Mirrors the preview only, like a selfie camera. This is purely visual:
+     the photo we capture in JavaScript is NOT flipped, so text or objects
+     in the background stay readable in the saved photo. */
+  transform: scaleX(-1);
+}
+
+.camera-panel__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+
+/* Error message box */
+.message {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.message--error {
+  background: #fbeeee;
+  color: #8a2f2f;
+  border-left: 4px solid #c96a6a;
+}
+
+/* Preview: image on top on phones, image + info side by side on larger screens */
+.preview {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  align-items: center;
+}
+
+.preview__image {
+  display: block;
+  width: 100%;
+  height: auto;              /* scales naturally, keeping the overlay aligned */
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+/* ---------- STEP 5: FACE DETECTION ---------- */
+
+/* Wraps the image so the overlay canvas can sit exactly on top of it */
+.preview__image-wrap {
+  position: relative;
+}
+
+/* face-api.js sizes this canvas to match the image with JavaScript;
+   this just positions it directly over the photo */
+.detection-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;      /* lets clicks pass through to whatever is beneath */
+}
+
+.detection-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.detection-status svg {
+  flex-shrink: 0;
+}
+
+/* Gentle pulse while detection is in progress */
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.detection-status--loading {
+  animation: statusPulse 1.2s ease-in-out infinite;
+}
+
+.detection-status--success {
+  color: #2f7a4d;
+}
+
+.detection-status--warning {
+  color: #a15c2a;
+}
+
+/* ---------- STEP 6: SKIN COLOR EXTRACTION ---------- */
+
+.skin-color-result {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.skin-color-swatch {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.skin-color-hex {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  font-family: "Courier New", monospace; /* makes the hex code easy to read */
+}
+
+/* ---------- STEP 7: SKIN TONE CLASSIFICATION ---------- */
+
+.skin-color-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.skin-tone-label {
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* ---------- STEP 8: COLOR RECOMMENDATIONS ---------- */
+
+.recommendations {
+  grid-column: 1 / -1;      /* spans both columns of the preview grid */
+  margin-top: 8px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.recommendations__title {
+  font-size: 1.05rem;
+  margin-bottom: 16px;
+}
+
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  gap: 16px;
+}
+
+.color-swatch-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.color-swatch-item__circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  transition: transform 0.15s ease;  /* small polish: a gentle hover grow */
+}
+
+.color-swatch-item:hover .color-swatch-item__circle {
+  transform: scale(1.1);
+}
+
+.color-swatch-item__name {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* ---------- STEP 9: RESULTS PAGE ---------- */
+
+.results-card {
+  max-width: 900px;
+  margin: 0 auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+
+.results-card__photo-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.results-card__photo {
+  width: 100%;
+  max-width: 320px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.results-card__details {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.results-tone {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.results-tone__swatch {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  flex-shrink: 0;
+}
+
+.results-tone__label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.results-tone__value {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.results-card__subheading {
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* ---------- STEP 10: OUTFIT COMBINATIONS ---------- */
+
+.outfit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.outfit-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.outfit-card__title {
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.outfit-card__pieces {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.outfit-piece {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 70px;
+}
+
+.outfit-piece__swatch {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;      /* rounded square, so it reads differently from the round palette swatches */
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.outfit-piece__role {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--text-muted);
+}
+
+.outfit-piece__name {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* ---------- STEP 12: ERROR HANDLING ---------- */
+
+.lighting-warning {
+  background: #fbeeee;
+  color: #8a2f2f;
+  border-left: 4px solid #c96a6a;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 0.9rem;
+}
+
+@media (min-width: 768px) {
+  .results-card {
+    grid-template-columns: 280px 1fr;
+    padding: 36px;
+  }
+}
+
+.preview__name {
+  font-weight: 600;
+  word-break: break-all;    /* stops long file names from overflowing */
+}
+
+.preview__meta {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+}
+
+@media (min-width: 768px) {
+  .analyze-card {
+    padding: 32px;
+  }
+
+  .preview {
+    grid-template-columns: 1.3fr 1fr;
+  }
+}
+
+/* ---------- 10. FOOTER ---------- */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 24px 0;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+
+/* ---------- 11. RESPONSIVE ---------- */
+/* Keep these in order from smallest to largest screen */
+
+/* Small tablets (600px+): step cards go 2 per row */
+@media (min-width: 600px) {
+  .steps {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Tablets and desktops (768px+) */
+@media (min-width: 768px) {
+  .nav-toggle {
+    display: none;
+  }
+
+  .nav-links {
+    display: flex;
+    flex-direction: row;
+    position: static;
+    background: none;
+    border: none;
+    padding: 0;
+    gap: 28px;
+  }
+
+  .nav-links a {
+    padding: 0;
+  }
+
+  .hero {
+    padding: 96px 0 112px;
+  }
+
+  .hero__inner {
+    grid-template-columns: 1.2fr 1fr;
+    gap: 56px;
+  }
+
+  .section {
+    padding: 88px 0;
+  }
+
+  .features {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Large screens (992px+): all 4 step cards in one row */
+@media (min-width: 992px) {
+  .steps {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+
+/* ---------- STEP 11: UI/UX IMPROVEMENTS ---------- */
+
+/* Scroll-reveal: elements start faded/lowered, then animate in once,
+   the moment they scroll into view */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.reveal--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Respect people who've asked their system for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* A little extra breathing room saved for very small phones */
+@media (max-width: 420px) {
+  .hero {
+    padding: 40px 0 56px;
+  }
+
+  .section {
+    padding: 48px 0;
+  }
+
+  .analyze-card,
+  .results-card {
+    padding: 18px;
+  }
+}
+
