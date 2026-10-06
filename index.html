@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ChromaticFit: A Skin Tone Classification and Color Recommendation System Using Facial Image Processing">
+  <title>ChromaticFit</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ===== NAVIGATION BAR (unchanged from Step 1) ===== -->
+  <header class="navbar">
+    <div class="container navbar__inner">
+      <a href="#home" class="logo">Chromatic<span>Fit</span></a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        ☰
+      </button>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="#home">Home</a>
+        <a href="#analyze">Analyze</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#about">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ===== 1. HERO ===== -->
+    <!-- The id="home" moved here from <main> so the "Home" link scrolls to the top -->
+    <section class="hero" id="home">
+      <div class="container hero__inner">   
+
+        <div class="hero__text">
+          <p class="hero__badge">College Project Prototype</p>
+          <h1>Discover the Colors That Complement You.</h1>
+          <p class="hero__description">
+            ChromaticFit is a student developed website application that analyzes
+            your facial skin color characteristics and suggests clothing colors that
+            may suit or complement you.
+          </p>
+
+          <div class="hero__actions">
+            <!-- A link styled like a button: scrolls down to the next section -->
+             <a href="#analyze" class="btn">Try It Now</a>
+            <a href="#how-it-works" class="btn">See How It Works</a>
+
+            <!-- Still disabled: upload and camera come in Steps 3 and 4 -->
+            <button class="btn" id="startBtn" disabled>Try It Now (coming soon)</button>
+          </div>
+        </div>
+
+        <div class="hero__visual" aria-hidden="true">
+          <div class="swatch-card">
+            <div class="swatch swatch--1"></div>
+            <div class="swatch swatch--2"></div>
+            <div class="swatch swatch--3"></div>
+            <div class="swatch swatch--4"></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+<!-- ===== RESULTS (Step 9) ===== -->
+    <section class="section section--alt" id="resultsSection" hidden>
+      <div class="container">
+
+        <div class="section__header">
+          <h2>Your Results</h2>
+          <p>Based on the photo you just analyzed.</p>
+        </div>
+
+        <div class="results-card">
+          <div class="results-card__photo-wrap">
+            <img id="resultPhoto" class="results-card__photo" alt="Analyzed photo">
+          </div>
+
+          <div class="results-card__details">
+
+            <div class="results-tone">
+              <span class="results-tone__swatch" id="resultSwatch"></span>
+              <div>
+                <p class="results-tone__label">Approximate Skin Tone</p>
+                <p class="results-tone__value" id="resultToneValue"></p>
+              </div>
+            </div>
+
+             <div>
+              <p class="results-card__subheading">Recommended Clothing Colors</p>
+              <div class="color-grid" id="resultColorGrid"></div>
+            </div>
+
+            <div>
+              <p class="results-card__subheading">Outfit Ideas</p>
+              <div class="outfit-list" id="outfitList"></div>
+            </div>
+
+            <div class="lighting-warning" id="lightingWarning" hidden></div>
+
+            <div class="notice">
+              <strong>Please note:</strong> Results are approximate and may vary
+              depending on lighting, camera quality, and image conditions.
+            </div>
+
+            <button type="button" class="btn" id="analyzeAnotherBtn">Analyze Another Photo</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+    
+    <!-- ===== 2. HOW IT WORKS ===== -->
+    <section class="section" id="how-it-works">
+      <div class="container">
+
+        <div class="section__header">
+          <h2>How It Works</h2>
+          <p>Four simple stages, from photo to color suggestions.</p>
+        </div>
+
+        <div class="steps">
+          <article class="card step-card">
+            <span class="step-card__number">1</span>
+            <h3>Upload or Capture</h3>
+            <p>Choose a clear, well-lit face photo, or take one with your camera.</p>
+          </article>
+
+          <article class="card step-card">
+            <span class="step-card__number">2</span>
+            <h3>Detect the Face</h3>
+            <p>The browser locates the face so only the right part of the image is analyzed.</p>
+          </article>
+
+          <article class="card step-card">
+            <span class="step-card__number">3</span>
+            <h3>Analyze Skin Color</h3>
+            <p>Pixel colors from facial skin regions are sampled and averaged into one representative color.</p>
+          </article>
+
+          <article class="card step-card">
+            <span class="step-card__number">4</span>
+            <h3>Get Recommendations</h3>
+            <p>See your approximate skin tone category and clothing colors that may complement it.</p>
+          </article>
+        </div>
+
+      </div>
+    </section>
+
+        <!-- ===== ANALYZE: IMAGE UPLOAD & PREVIEW (Step 3) ===== -->
+    <section class="section section--alt" id="analyze">
+      <div class="container">
+
+        <div class="section__header">
+          <h2>Analyze Your Photo</h2> 
+          <p>Upload a clear, front facing photo in good lighting. Your image stays in your browser.</p>
+        </div>
+
+        <div class="analyze-card">
+
+          <!-- The real file input is hidden; the "Choose Image" button opens it -->
+          <input type="file" id="imageInput" accept="image/png, image/jpeg, image/webp" hidden>
+
+           <!-- PART A: upload area (visible first) -->
+          <div class="dropzone" id="dropzone">
+            <div class="dropzone__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="40" height="40">
+                <path d="M12 16V4"></path>
+                <path d="M7 9l5-5 5 5"></path>
+                <path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"></path>
+              </svg>
+            </div>
+            <p class="dropzone__title">Drag and drop your photo here</p>
+            <p class="dropzone__hint">JPG, PNG, or WebP, up to 10 MB</p>
+            <div class="dropzone__actions">
+              <button type="button" class="btn" id="chooseBtn">Choose Image</button>
+              <button type="button" class="btn btn--outline" id="useCameraBtn">Use Camera</button>
+            </div>
+          </div>
+
+          <!-- PART A2: live camera (hidden until "Use Camera" is clicked) -->
+          <div class="camera-panel" id="cameraPanel" hidden>
+            <!-- muted + playsinline are required for autoplay to work reliably -->
+            <video id="cameraVideo" class="camera-panel__video" autoplay playsinline muted></video>
+
+            <div class="camera-panel__actions">
+              <button type="button" class="btn" id="captureBtn">Capture Photo</button>
+              <button type="button" class="btn btn--outline" id="cancelCameraBtn">Cancel</button>
+            </div>
+          </div>
+
+          <!-- Hidden canvas: never shown, only used to grab a still frame from the video -->
+          <canvas id="captureCanvas" hidden></canvas>
+                    <!-- Hidden canvas used only to read real pixel colors from the photo (Step 6) -->
+          <canvas id="analysisCanvas" hidden></canvas>
+          <!-- Error message (hidden until something goes wrong) -->
+          <p class="message message--error" id="uploadMessage" hidden></p>
+
+          <!-- PART C: preview (hidden until an image is chosen) -->
+          <div class="preview" id="previewArea" hidden>
+
+            <!-- The image and the detection box now share this wrapper -->
+            <div class="preview__image-wrap">
+              <img id="previewImage" class="preview__image" alt="Preview of the uploaded photo">
+              <canvas id="detectionOverlay" class="detection-overlay"></canvas>
+            </div>
+
+            <div class="preview__info">
+              <p class="detection-status" id="detectionStatus"></p>
+
+              <div class="skin-color-result" id="skinColorResult" hidden>
+                <span class="skin-color-swatch" id="skinColorSwatch"></span>
+                <div class="skin-color-text">
+                  <p class="skin-tone-label" id="skinToneLabel"></p>
+                  <p class="skin-color-hex" id="skinColorHex"></p>
+                </div>
+              </div>
+
+              <p class="preview__name" id="fileName"></p>
+              <p class="preview__meta" id="fileDetails"></p>
+              <button type="button" class="btn btn--outline" id="removeBtn">Choose Another Image</button>
+            </div>
+
+            <!-- Recommended clothing colors (Step 8) -->
+            <div class="recommendations" id="recommendations" hidden>
+              <h3 class="recommendations__title">Recommended Clothing Colors</h3>
+              <div class="color-grid" id="colorGrid"></div>
+            </div>
+
+            <!-- Recommended clothing colors (Step 8) -->
+            <div class="recommendations" id="recommendations" hidden>
+              <h3 class="recommendations__title">Recommended Clothing Colors</h3>
+              <div class="color-grid" id="colorGrid"></div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ===== 3. WHY CHROMATICFIT (features) ===== -->
+    <section class="section section--alt" id="features">
+      <div class="container">
+
+        <div class="section__header">
+          <h2>Why ChromaticFit?</h2>
+          <p>Built to be simple, private, and honest about its limits.</p>
+        </div>
+
+        <div class="features">
+          <article class="card feature-card">
+            <span class="feature-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
+                <rect x="5" y="11" width="14" height="9" rx="2"></rect>
+                <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+              </svg>
+            </span>
+            <h3>Private by Design</h3>
+            <p>Images are processed locally in your browser. Nothing is uploaded or stored.</p>
+          </article>
+
+          <article class="card feature-card">
+            <span class="feature-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
+                <circle cx="11" cy="11" r="7"></circle>
+                <path d="M21 21l-4.35-4.35"></path>
+              </svg>
+            </span>
+            <h3>Real Image Processing</h3>
+            <p>Results come from analyzing the actual pixel colors of your image, not random guesses.</p>
+          </article>
+
+          <article class="card feature-card">
+              <span class="feature-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
+                <path d="M12 3a9 9 0 1 0 0 18c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.4-.3-.4-.5-.8-.5-1.3 0-.9.7-1.6 1.6-1.6H16a4 4 0 0 0 4-4c0-4.4-3.6-8-8-8z"></path>
+                <circle cx="7.5" cy="10.5" r="1" fill="currentColor" stroke="none"></circle>
+                <circle cx="10.5" cy="7" r="1" fill="currentColor" stroke="none"></circle>
+                <circle cx="15" cy="7.5" r="1" fill="currentColor" stroke="none"></circle>
+              </svg>
+            </span>
+            <h3>Simple Color Ideas</h3>
+            <p>Get easy-to-follow clothing color suggestions and outfit combinations.</p>
+          </article>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ===== 4. ABOUT ===== -->
+    <section class="section" id="about">
+      <div class="container about">
+
+        <div class="section__header">
+          <h2>About This Project</h2>
+          <p>
+            ChromaticFit is a prototype made for a college Programming Logic and
+            Design project, using HTML, CSS, JavaScript, and the Canvas API.
+          </p>
+        </div>
+
+        <p class="about__label">Approximate Skin Tone Classification categories</p>
+        <div class="chips">
+          <span class="chip">Very Light</span>
+          <span class="chip">Light</span>
+          <span class="chip">Medium</span>
+          <span class="chip">Tan</span>
+          <span class="chip">Deep</span>
+        </div>
+
+        <div class="notice">
+          <strong>Please note:</strong> Results are approximate and may vary
+          depending on lighting, camera quality, and image conditions.
+          ChromaticFit is not a professional dermatological or color-analysis system.
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <p>© <span id="year"></span> ChromaticFit. A student prototype, not a professional dermatological or color-analysis system.</p>
+    </div>
+  </footer>
+
+    <!-- Face detection library, loaded from a CDN (must come BEFORE app.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
